@@ -151,12 +151,12 @@ def clear_blackboard(web_object=None):
         web_object = mw.reviewer.web
 
     if ts_state_on:
-        javascript = """
-        clear_canvas();
-        """
+        javascript = 'clear_canvas();'
         web_object.eval(javascript)
 
 
+def ts_resize(html, card, context):
+    return html + "<script>window.setInterval(resize, 550);</script>"
 
 def ts_onload():
     """
@@ -167,17 +167,17 @@ def ts_onload():
     addHook("unloadProfile", ts_save)
     addHook("profileLoaded", ts_load)
     addHook("showQuestion", clear_blackboard)
-    #ddHook("showAnswer", reshow_blackboard)
-
+    #addHook("showAnswer", ts_resize)
+    addHook('prepareQA', ts_resize)
     ts_setup_menu()
 
 ts_blackboard = u"""
 <div id="canvas_wrapper">
     <canvas id="main_canvas" width="100" height="100"></canvas>
         <div id="pencil_button_bar">
-            <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D">
-            <input type="button" class="active" onclick="ts_undo();" value="\u21B6">
-            <input type="button" class="active" onclick="clear_canvas();" value="\u2715">
+            <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D" title="Toggle visiblity">
+            <input type="button" class="active" onclick="ts_undo();" value="\u21B6" title="Undo the last stroke">
+            <input type="button" class="active" onclick="clear_canvas();" value="\u2715" title="Clean whiteboard">
         </div>
     </div>
 </div>
@@ -218,10 +218,14 @@ ts_blackboard = u"""
 
 var visible = true;
 var canvas = document.getElementById('main_canvas');
+var wrapper = document.getElementById('canvas_wrapper');
 var ctx = canvas.getContext('2d');
 var arrays_of_points = [ ];
 var color = '#fff';
 var line_width = 4;
+
+canvas.onselectstart = function() { return false; };
+wrapper.onselectstart = function() { return false; };
 
 function switch_visibility()
 {
@@ -264,14 +268,19 @@ function switch_class(e,c)
 }
 
 function resize() {
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
-    document.getElementById('canvas_wrapper').style.width = ctx.canvas.width + 'px';
+    var card = document.getElementsByClassName('card')[0]
+    ctx.canvas.width = document.documentElement.scrollWidth - 1;
+    ctx.canvas.height = Math.max(document.body.clientHeight, window.innerHeight, document.documentElement.scrollHeight, card.scrollHeight) - 1;
+
+    canvas.style.height = ctx.canvas.height + 'px';
+    wrapper.style.width = ctx.canvas.width + 'px';
+    wrapper.style.height = ctx.canvas.height + 'px';
+    update_pen_settings()
 }
 
-resize();
-
+window.setTimeout(resize, 100)
 window.addEventListener('resize', resize);
+document.body.addEventListener('load', resize)
 
 var isMouseDown = false;
 var mouseX = 0;
