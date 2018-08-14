@@ -29,8 +29,7 @@ from anki.lang import _
 from anki.hooks import addHook
 from anki.hooks import wrap
 
-from PyQt5.QtWidgets import QAction, QMenu, \
-                        QColorDialog, QMessageBox, QInputDialog
+from PyQt5.QtWidgets import QAction, QMenu, QColorDialog, QMessageBox, QInputDialog
 from PyQt5 import QtCore
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtGui import QColor
@@ -79,9 +78,9 @@ def ts_change_width():
 @slot()
 def ts_change_opacity():
     global ts_opacity
-    value, accepted = QInputDialog.getDouble(mw, "Touch Screen", "Enter the opacity (0-1):", ts_opacity)
+    value, accepted = QInputDialog.getDouble(mw, "Touch Screen", "Enter the opacity (100 = transparent, 0 = opaque):", 100 * ts_opacity, 0, 100, 2)
     if accepted:
-        ts_opacity = value
+        ts_opacity = value / 100
         execute_js("canvas.style.opacity = " + str(ts_opacity))
         ts_refresh()
 
@@ -333,14 +332,13 @@ def custom(*args, **kwargs):
     default = ts_default_review_html(*args, **kwargs)
     if not ts_state_on:
         return default
-    o = (
+    output = (
         default +
         ts_blackboard + 
         "<script>color = '" + ts_color + "'</script>" +
         "<script>line_width = '" + str(ts_line_width) + "'</script>"
     )
-    print(o)
-    return o
+    return output
 
 mw.reviewer.revHtml = custom
 
@@ -419,7 +417,7 @@ def ts_setup_menu():
     """
     Initialize menu. If there is an entity "View" in top level menu
     (shared with other plugins, like "Zoom" of R. Sieker) options of
-    Night Mode will be putted there. In other case it creates that menu.
+    the addon will be placed there. In other case it creates that menu.
     """
     global ts_menu_switch
 
