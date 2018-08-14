@@ -223,15 +223,15 @@ var line_width = 4;
 
 function switch_visibility()
 {
-	if (visible)
-	{
-		canvas.style.display='none';
-	}
-	else
-	{
-		canvas.style.display='block';
-	}
-	visible = !visible;
+    if (visible)
+    {
+        canvas.style.display='none';
+    }
+    else
+    {
+        canvas.style.display='block';
+    }
+    visible = !visible;
 }
 
 
@@ -244,27 +244,27 @@ function midPointBtw(p1, p2) {
 
 function clear_canvas()
 {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-   	arrays_of_points=[];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    arrays_of_points=[];
 }
 
 function switch_class(e,c)
 {
     var reg = new RegExp('(\\\s|^)' + c + '(\\s|$)');
-	if (e.className.match(new RegExp('(\\s|^)' + c + '(\\s|$)')))
-	{
-		e.className = e.className.replace(reg, '');
-	}
-	else
-	{
-		e.className += c;
-	}
+    if (e.className.match(new RegExp('(\\s|^)' + c + '(\\s|$)')))
+    {
+        e.className = e.className.replace(reg, '');
+    }
+    else
+    {
+        e.className += c;
+    }
 }
 
 function resize() {
-	ctx.canvas.width = window.innerWidth;
-	ctx.canvas.height = window.innerHeight;
-	document.getElementById('canvas_wrapper').style.width = ctx.canvas.width + 'px';
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height = window.innerHeight;
+    document.getElementById('canvas_wrapper').style.width = ctx.canvas.width + 'px';
 }
 
 resize();
@@ -277,22 +277,22 @@ var mouseY = 0;
 var active = true;
 
 function update_pen_settings(){
-	ctx.lineJoin = ctx.lineCap = 'round';
-	ctx.lineWidth = line_width;
-	ctx.strokeStyle = color;
+    ctx.lineJoin = ctx.lineCap = 'round';
+    ctx.lineWidth = line_width;
+    ctx.strokeStyle = color;
     ts_redraw()
 }
 
 canvas.addEventListener("mousedown",function (e) {
-	isMouseDown = true;
-	arrays_of_points.push(new Array());
-	arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
+    isMouseDown = true;
+    arrays_of_points.push(new Array());
+    arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
     update_pen_settings()
 });
  
 window.addEventListener("mouseup",function (e) {
     isMouseDown = false;
-	//points.length = 0;
+    //points.length = 0;
 });
 
 
@@ -320,7 +320,7 @@ canvas.addEventListener("mousemove",function (e) {
     if (isMouseDown && active) {
         arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
         ts_redraw()
-	}
+    }
 });
 
 </script>
