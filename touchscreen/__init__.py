@@ -188,6 +188,9 @@ ts_blackboard = u"""
     top: 0px;
     left: 0px;
 }
+#canvas_wrapper{
+    position: fixed
+}
 #main_canvas{
     opacity: """ + str(ts_opacity) + """;
 }
@@ -274,11 +277,11 @@ function resize() {
 
     canvas.style.height = ctx.canvas.height + 'px';
     wrapper.style.width = ctx.canvas.width + 'px';
-    wrapper.style.height = ctx.canvas.height + 'px';
+    wrapper.style.height = '100px';
     update_pen_settings()
 }
 
-window.setTimeout(resize, 100)
+window.setTimeout(resize, 0)
 window.addEventListener('resize', resize);
 document.body.addEventListener('load', resize)
 
