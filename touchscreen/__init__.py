@@ -19,7 +19,7 @@ Important parts of Javascript code inspired by http://creativejs.com/tutorials/p
 """
 
 __addon_name__ = "TouchScreen"
-__version__ = "0.2"
+__version__ = "0.2.1"
 
 from aqt import mw, dialogs
 from aqt.utils import showWarning
