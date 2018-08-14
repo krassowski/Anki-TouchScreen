@@ -174,9 +174,11 @@ def ts_onload():
 ts_blackboard = u"""
 <div id="canvas_wrapper">
     <canvas id="main_canvas" width="100" height="100"></canvas>
-    <div id="pencil_button_bar">
-        <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D">
-        <input type="button" class="active" onclick="clear_canvas();" value="\u2715"></div>
+        <div id="pencil_button_bar">
+            <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D">
+            <input type="button" class="active" onclick="ts_undo();" value="\u21B6">
+            <input type="button" class="active" onclick="clear_canvas();" value="\u2715">
+        </div>
     </div>
 </div>
 <style>
@@ -207,7 +209,7 @@ ts_blackboard = u"""
     margin:0px;
     display: inline-block;
     float:left;
-    width:60px!important;
+    width:90px!important;
     font-size: 130%
 }
 </style>
@@ -289,6 +291,11 @@ canvas.addEventListener("mousedown",function (e) {
     arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
     update_pen_settings()
 });
+
+function ts_undo(){
+    arrays_of_points.pop()
+    ts_redraw()
+}
  
 window.addEventListener("mouseup",function (e) {
     isMouseDown = false;
