@@ -172,14 +172,13 @@ def ts_onload():
     ts_setup_menu()
 
 ts_blackboard = u"""
+<div id="pencil_button_bar">
+    <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D" title="Toggle visiblity">
+    <input type="button" class="active" onclick="ts_undo();" value="\u21B6" title="Undo the last stroke">
+    <input type="button" class="active" onclick="clear_canvas();" value="\u2715" title="Clean whiteboard">
+</div>
 <div id="canvas_wrapper">
     <canvas id="main_canvas" width="100" height="100"></canvas>
-        <div id="pencil_button_bar">
-            <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D" title="Toggle visiblity">
-            <input type="button" class="active" onclick="ts_undo();" value="\u21B6" title="Undo the last stroke">
-            <input type="button" class="active" onclick="clear_canvas();" value="\u2715" title="Clean whiteboard">
-        </div>
-    </div>
 </div>
 <style>
 #canvas_wrapper, #main_canvas
@@ -187,9 +186,6 @@ ts_blackboard = u"""
     position:absolute;
     top: 0px;
     left: 0px;
-}
-#canvas_wrapper{
-    position: fixed
 }
 #main_canvas{
     opacity: """ + str(ts_opacity) + """;
@@ -200,7 +196,7 @@ ts_blackboard = u"""
 }
 #pencil_button_bar
 {
-    position:absolute;
+    position: fixed;
     top: 0px;
     right: 0px;    
 }
