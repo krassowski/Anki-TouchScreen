@@ -19,7 +19,7 @@ Important parts of Javascript code inspired by http://creativejs.com/tutorials/p
 """
 
 __addon_name__ = "TouchScreen"
-__version__ = "0.2.1"
+__version__ = "0.2.2"
 
 from aqt import mw, dialogs
 from aqt.utils import showWarning
@@ -172,13 +172,13 @@ def ts_onload():
     ts_setup_menu()
 
 ts_blackboard = u"""
+<div id="canvas_wrapper">
+    <canvas id="main_canvas" width="100" height="100"></canvas>
+</div>
 <div id="pencil_button_bar">
     <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D" title="Toggle visiblity">
     <input type="button" class="active" onclick="ts_undo();" value="\u21B6" title="Undo the last stroke">
     <input type="button" class="active" onclick="clear_canvas();" value="\u2715" title="Clean whiteboard">
-</div>
-<div id="canvas_wrapper">
-    <canvas id="main_canvas" width="100" height="100"></canvas>
 </div>
 <style>
 #canvas_wrapper, #main_canvas
