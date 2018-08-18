@@ -19,7 +19,7 @@ Important parts of Javascript code inspired by http://creativejs.com/tutorials/p
 """
 
 __addon_name__ = "TouchScreen"
-__version__ = "0.2.2"
+__version__ = "0.2.3"
 
 from aqt import mw, dialogs
 from aqt.utils import showWarning
@@ -27,19 +27,12 @@ from aqt.utils import showWarning
 
 from anki.lang import _
 from anki.hooks import addHook
-from anki.hooks import wrap
 
 from PyQt5.QtWidgets import QAction, QMenu, QColorDialog, QMessageBox, QInputDialog
 from PyQt5 import QtCore
 from PyQt5.QtGui import QKeySequence
 from PyQt5.QtGui import QColor
-from PyQt5.QtCore import Qt, pyqtSlot as slot
-from os.path import isfile
-
-try:
-    nm_from_utf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    nm_from_utf8 = lambda s: s
+from PyQt5.QtCore import pyqtSlot as slot
 
 # This declarations are there only to be sure that in case of troubles
 # with "profileLoaded" hook everything will work.
@@ -66,6 +59,7 @@ def ts_change_color():
         execute_js("color = '" + ts_color + "'; update_pen_settings()")
         ts_refresh()
 
+
 @slot()
 def ts_change_width():
     global ts_line_width
@@ -75,6 +69,7 @@ def ts_change_width():
         execute_js("line_width = '" + str(ts_line_width) + "'; update_pen_settings()")
         ts_refresh()
 
+
 @slot()
 def ts_change_opacity():
     global ts_opacity
@@ -83,6 +78,7 @@ def ts_change_opacity():
         ts_opacity = value / 100
         execute_js("canvas.style.opacity = " + str(ts_opacity))
         ts_refresh()
+
 
 @slot()
 def ts_about():
@@ -132,6 +128,7 @@ def ts_load():
 
     assure_pluged_in()
 
+
 def execute_js(code):
     web_object = mw.reviewer.web
     web_object.eval(code)
@@ -143,6 +140,7 @@ def assure_pluged_in():
     if not mw.reviewer.revHtml == custom:
         ts_default_review_html = mw.reviewer.revHtml
         mw.reviewer.revHtml = custom
+
 
 def clear_blackboard(web_object=None):
     assure_pluged_in()
@@ -156,7 +154,18 @@ def clear_blackboard(web_object=None):
 
 
 def ts_resize(html, card, context):
-    return html + "<script>window.setInterval(resize, 550);</script>"
+    if ts_state_on:
+        html += """
+        <script>
+        var ts_interval;
+        if(ts_interval === undefined){
+            if(resize !== undefined)
+                ts_interval = window.setInterval(resize, 750);
+        }
+        </script>
+        """
+    return html
+
 
 def ts_onload():
     """
@@ -167,9 +176,9 @@ def ts_onload():
     addHook("unloadProfile", ts_save)
     addHook("profileLoaded", ts_load)
     addHook("showQuestion", clear_blackboard)
-    #addHook("showAnswer", ts_resize)
     addHook('prepareQA', ts_resize)
     ts_setup_menu()
+
 
 ts_blackboard = u"""
 <div id="canvas_wrapper">
@@ -177,7 +186,7 @@ ts_blackboard = u"""
 </div>
 <div id="pencil_button_bar">
     <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D" title="Toggle visiblity">
-    <input type="button" class="active" onclick="ts_undo();" value="\u21B6" title="Undo the last stroke">
+    <input type="button" onclick="ts_undo();" value="\u21B6" title="Undo the last stroke" id="ts_undo_button">
     <input type="button" class="active" onclick="clear_canvas();" value="\u2715" title="Clean whiteboard">
 </div>
 <style>
@@ -190,34 +199,53 @@ ts_blackboard = u"""
 #main_canvas{
     opacity: """ + str(ts_opacity) + """;
 }
-#pencil_button_bar input[type=button].active
+.night_mode #pencil_button_bar input[type=button].active
 {
     color: #fff!important;
+}
+#pencil_button_bar input[type=button].active
+{
+    color: black!important;
 }
 #pencil_button_bar
 {
     position: fixed;
-    top: 0px;
-    right: 0px;    
+    top: 1px;
+    right: 1px;
+    font-family: "Arial Unicode MS", unifont, "Everson Mono", tahoma, arial;
 }
 #pencil_button_bar input[type=button]
 {
-    color:#444!important;
-    background-color:rgba(10,10,10,0.5)!important;
     border: 1px solid black;
-    margin:0px;
+    margin: 0 1px;
     display: inline-block;
-    float:left;
-    width:90px!important;
-    font-size: 130%
+    float: left;
+    width: 90px!important;
+    font-size: 130%;
+    line-height: 130%;
+    height: 50px;
+    border-radius: 8px;
+    background-color: rgba(250,250,250,0.5)!important;
+    color: black;
+    color: #ccc!important;
+}
+.night_mode #pencil_button_bar input[type=button]{
+    background-color: rgba(10,10,10,0.5)!important;
+    border-color: #ccc;
+    color: #444!important;
+    text-shadow: 0 0 1px rgba(5, 5, 5, 0.9);
+}
+#canvas_wrapper
+{
+    height: 100px
 }
 </style>
 
 <script>
-
 var visible = true;
 var canvas = document.getElementById('main_canvas');
 var wrapper = document.getElementById('canvas_wrapper');
+var ts_undo_button = document.getElementById('ts_undo_button');
 var ctx = canvas.getContext('2d');
 var arrays_of_points = [ ];
 var color = '#fff';
@@ -269,11 +297,15 @@ function switch_class(e,c)
 function resize() {
     var card = document.getElementsByClassName('card')[0]
     ctx.canvas.width = document.documentElement.scrollWidth - 1;
-    ctx.canvas.height = Math.max(document.body.clientHeight, window.innerHeight, document.documentElement.scrollHeight, card.scrollHeight) - 1;
+    ctx.canvas.height = Math.max(
+        document.body.clientHeight,
+        window.innerHeight,
+        document.documentElement ? document.documentElement.scrollHeight : 0,
+        card ? card.scrollHeight : 0
+    ) - 1;
 
     canvas.style.height = ctx.canvas.height + 'px';
     wrapper.style.width = ctx.canvas.width + 'px';
-    wrapper.style.height = '100px';
     update_pen_settings()
 }
 
@@ -298,16 +330,20 @@ canvas.addEventListener("mousedown",function (e) {
     arrays_of_points.push(new Array());
     arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
     update_pen_settings()
+    ts_undo_button.className = "active"
 });
 
 function ts_undo(){
     arrays_of_points.pop()
+    if(!arrays_of_points.length)
+    {
+        ts_undo_button.className = ""
+    }
     ts_redraw()
 }
  
 window.addEventListener("mouseup",function (e) {
     isMouseDown = false;
-    //points.length = 0;
 });
 
 
@@ -355,6 +391,7 @@ def custom(*args, **kwargs):
     )
     return output
 
+
 mw.reviewer.revHtml = custom
 
 
@@ -363,19 +400,13 @@ def ts_on():
     Turn on
     """
     if not ts_profile_loaded:
-        showWarning(NM_ERROR_NO_PROFILE)
+        showWarning(TS_ERROR_NO_PROFILE)
         return False
 
     global ts_state_on
-
-    try:
-        ts_state_on = True
-
-        ts_menu_switch.setChecked(True)
-        return True
-    except:
-        showWarning(NM_ERROR_SWITCH)
-        return False
+    ts_state_on = True
+    ts_menu_switch.setChecked(True)
+    return True
 
 
 def ts_off():
@@ -383,18 +414,14 @@ def ts_off():
     Turn off
     """
     if not ts_profile_loaded:
-        showWarning(NM_ERROR_NO_PROFILE)
+        showWarning(TS_ERROR_NO_PROFILE)
         return False
 
-    try:
-        global ts_state_on
-        ts_state_on = False     
+    global ts_state_on
+    ts_state_on = False
+    ts_menu_switch.setChecked(False)
+    return True
 
-        ts_menu_switch.setChecked(False)
-        return True
-    except:
-        showWarning(NM_ERROR_SWITCH)
-        return False
 
 @slot()
 def ts_switch():
@@ -469,7 +496,8 @@ def ts_setup_menu():
     ts_menu_opacity.triggered.connect(ts_change_opacity)
     ts_menu_about.triggered.connect(ts_about)
 
-NM_ERROR_NO_PROFILE = "No profile loaded"
+
+TS_ERROR_NO_PROFILE = "No profile loaded"
 
 #
 # ONLOAD SECTION
