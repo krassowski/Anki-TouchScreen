@@ -377,6 +377,13 @@ canvas.addEventListener("mousemove",function (e) {
     }
 });
 
+document.addEventListener('keyup', function(e) {
+    // Z or z
+    if ((e.keyCode == 90 || e.keyCode == 122) && e.altKey) {
+        ts_undo()
+    }
+})
+
 </script>
 """
 
