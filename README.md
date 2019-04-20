@@ -14,10 +14,10 @@ Warning: the version for Anki 2.0 has limited functionality, and may sometimes n
 
 
 #### Changelog:
-0.2.4 - add support for enhanced image occlusion, add a fix for "a double click bug" by LaucianK 
-0.2.3 - bug fix release, improvements to undo button, styling and performance
-0.2.1 - minor fix for the buttons/canvas positioning
-0.2 - added "undo" option, improved the support of long cards plus other minor improvements
+- 0.2.4 - add support for enhanced image occlusion, add a fix for "a double click bug" by LaucianK 
+- 0.2.3 - bug fix release, improvements to undo button, styling and performance
+- 0.2.1 - minor fix for the buttons/canvas positioning
+- 0.2 - added "undo" option, improved the support of long cards plus other minor improvements
 
 #### Disclaimer
 Important parts of Javascript code were inspired by <a href="http://creativejs.com/tutorials/painting-with-pixels/index.html" rel="nofollow">creativejs tutorial</a>. I recommend you check out the resource if you are interested in learning JS.
