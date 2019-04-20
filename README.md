@@ -14,6 +14,7 @@ Warning: the version for Anki 2.0 has limited functionality, and may sometimes n
 
 
 #### Changelog:
+- 0.2.6 - make "undo" action available under <kbd>Alt</kbd> + <kbd>Z</kbd>
 - 0.2.4 - add support for enhanced image occlusion, add a fix for "a double click bug" by LaucianK 
 - 0.2.3 - bug fix release, improvements to undo button, styling and performance
 - 0.2.1 - minor fix for the buttons/canvas positioning
