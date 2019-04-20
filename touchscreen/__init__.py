@@ -327,15 +327,6 @@ function update_pen_settings(){
     ts_redraw()
 }
 
-canvas.addEventListener("mousedown",function (e) {
-    isMouseDown = true;
-    event.preventDefault();
-    arrays_of_points.push(new Array());
-    arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
-    update_pen_settings()
-    ts_undo_button.className = "active"
-});
-
 function ts_undo(){
     arrays_of_points.pop()
     if(!arrays_of_points.length)
@@ -344,11 +335,6 @@ function ts_undo(){
     }
     ts_redraw()
 }
- 
-window.addEventListener("mouseup",function (e) {
-    isMouseDown = false;
-});
-
 
 function ts_redraw()
 {
@@ -369,13 +355,30 @@ function ts_redraw()
     }
 
 }
- 
-canvas.addEventListener("mousemove",function (e) {
+
+function start_motion(e) {
+    e.preventDefault();
+    arrays_of_points.push(new Array());
+    arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
+    update_pen_settings()
+    ts_undo_button.className = "active"
+}
+
+function handle_movement(e) {
     if (isMouseDown && active) {
         arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
         ts_redraw()
     }
-});
+}
+
+//canvas.addEventListener("mousedown",function (e) { isMouseDown = true; start_motion(e) });
+//window.addEventListener("mouseup",function (e) { isMouseDown = false; });
+//canvas.addEventListener("mousemove",function (e) { handle_movement(e) });
+
+canvas.addEventListener("pointerdown",function (e) { isMouseDown = true; start_motion(e) });
+window.addEventListener("pointerup",function (e) { isMouseDown = false; });
+canvas.addEventListener("pointermove",function (e) { handle_movement(e) });
+
 
 document.addEventListener('keyup', function(e) {
     // Z or z
