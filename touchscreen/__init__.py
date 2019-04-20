@@ -213,6 +213,7 @@ ts_blackboard = u"""
     position: fixed;
     top: 1px;
     right: 1px;
+    z-index: 1000;
     font-family: "Arial Unicode MS", unifont, "Everson Mono", tahoma, arial;
 }
 #pencil_button_bar input[type=button]
