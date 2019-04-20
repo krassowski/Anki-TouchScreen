@@ -169,6 +169,7 @@ ts_blackboard = u"""
     position:absolute;
     top: 0px;
     right: 0px;    
+    z-index: 1000;
 }
 #pencil_button_bar input[type=button]
 {
