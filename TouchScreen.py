@@ -249,6 +249,7 @@ var active = true;
 
 canvas.addEventListener("mousedown",function (e) {
 	isMouseDown = true;
+	event.preventDefault();
 	arrays_of_points.push(new Array());
 	arrays_of_points[arrays_of_points.length-1].push({ x: e.offsetX, y: e.offsetY });
 	ctx.lineJoin = ctx.lineCap = 'round';
