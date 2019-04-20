@@ -228,7 +228,6 @@ ts_blackboard = u"""
     height: 50px;
     border-radius: 8px;
     background-color: rgba(250,250,250,0.5)!important;
-    color: black;
     color: #ccc!important;
 }
 .night_mode #pencil_button_bar input[type=button]{
