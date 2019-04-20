@@ -126,7 +126,7 @@ def ts_load():
     if ts_state_on:
         ts_on()
 
-    assure_pluged_in()
+    assure_plugged_in()
 
 
 def execute_js(code):
@@ -134,7 +134,7 @@ def execute_js(code):
     web_object.eval(code)
 
 
-def assure_pluged_in():
+def assure_plugged_in():
     global ts_default_review_html
 
     if not mw.reviewer.revHtml == custom:
@@ -143,7 +143,7 @@ def assure_pluged_in():
 
 
 def clear_blackboard(web_object=None):
-    assure_pluged_in()
+    assure_plugged_in()
 
     if not web_object: 
         web_object = mw.reviewer.web
@@ -195,6 +195,7 @@ ts_blackboard = u"""
     position:absolute;
     top: 0px;
     left: 0px;
+    z-index: 999;
 }
 #main_canvas{
     opacity: """ + str(ts_opacity) + """;
