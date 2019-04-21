@@ -202,10 +202,14 @@ ts_blackboard = u"""
 }
 .night_mode #pencil_button_bar input[type=button].active
 {
+    -webkit-filter: grayscale(0);
+    filter: none;
     color: #fff!important;
 }
 #pencil_button_bar input[type=button].active
 {
+    -webkit-filter: grayscale(0);
+    filter: none;
     color: black!important;
 }
 #pencil_button_bar
@@ -218,6 +222,9 @@ ts_blackboard = u"""
 }
 #pencil_button_bar input[type=button]
 {
+    filter: gray;
+    -webkit-filter: grayscale(1);
+    filter: grayscale(1);
     border: 1px solid black;
     margin: 0 1px;
     display: inline-block;
