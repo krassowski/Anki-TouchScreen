@@ -314,6 +314,19 @@ function resize() {
 
     canvas.style.height = ctx.canvas.height + 'px';
     wrapper.style.width = ctx.canvas.width + 'px';
+    
+    /* Get DPR with 1 as fallback */
+    var dpr = window.devicePixelRatio || 1;
+    
+    /* CSS size is the same */
+    canvas.style.height = ctx.canvas.height + 'px';
+    wrapper.style.width = ctx.canvas.width + 'px';
+    
+    /* Increase DOM size and scale */
+    ctx.canvas.width *= dpr;
+    ctx.canvas.height *= dpr;
+    ctx.scale(dpr, dpr);
+    
     update_pen_settings()
 }
 
