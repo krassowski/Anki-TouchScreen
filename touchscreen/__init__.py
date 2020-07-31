@@ -185,9 +185,9 @@ ts_blackboard = u"""
     <canvas id="main_canvas" width="100" height="100"></canvas>
 </div>
 <div id="pencil_button_bar">
-    <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="\u270D" title="Toggle visiblity">
-    <input type="button" onclick="ts_undo();" value="\u21B6" title="Undo the last stroke" id="ts_undo_button">
-    <input type="button" class="active" onclick="clear_canvas();" value="\u2715" title="Clean whiteboard">
+    <input type="button" class="active" onclick="active=!active;switch_visibility();switch_class(this, 'active');" value="Visibility" title="Toggle visiblity">
+    <input type="button" onclick="ts_undo();" value="Undo" title="Undo the last stroke" id="ts_undo_button">
+    <input type="button" class="active" onclick="clear_canvas();" value="Clear" title="Clean whiteboard">
 </div>
 <style>
 #canvas_wrapper, #main_canvas
@@ -215,8 +215,8 @@ ts_blackboard = u"""
 #pencil_button_bar
 {
     position: fixed;
-    top: 1px;
-    right: 1px;
+    top: 16px;
+    right: 16px;
     z-index: 1000;
     font-family: "Arial Unicode MS", unifont, "Everson Mono", tahoma, arial;
 }
@@ -230,8 +230,7 @@ ts_blackboard = u"""
     display: inline-block;
     float: left;
     width: 90px!important;
-    font-size: 130%;
-    line-height: 130%;
+    font-size: 16px;
     height: 50px;
     border-radius: 8px;
     background-color: rgba(250,250,250,0.5)!important;
