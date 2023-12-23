@@ -21,18 +21,16 @@ Important parts of Javascript code inspired by http://creativejs.com/tutorials/p
 __addon_name__ = "TouchScreen"
 __version__ = "0.2.6"
 
-from aqt import mw, dialogs
-from aqt.utils import showWarning
 
+from aqt import mw
+from aqt.utils import showWarning
 
 from anki.lang import _
 from anki.hooks import addHook
 
-from PyQt5.QtWidgets import QAction, QMenu, QColorDialog, QMessageBox, QInputDialog
-from PyQt5 import QtCore
-from PyQt5.QtGui import QKeySequence
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import pyqtSlot as slot
+from aqt import QMenu, QColorDialog, QMessageBox, QInputDialog, QAction, QKeySequence, QColor
+from aqt import pyqtSlot as slot
+
 
 # This declarations are there only to be sure that in case of troubles
 # with "profileLoaded" hook everything will work.
